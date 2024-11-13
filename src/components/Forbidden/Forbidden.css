@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .forbidden-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #eaeaea;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+  
+  .forbidden-content {
+    text-align: center;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .forbidden-title {
+    font-size: 6rem;
+    color: #b22222;
+    margin-bottom: 10px;
+  }
+  
+  .forbidden-subtitle {
+    font-size: 2rem;
+    color: #444;
+    margin-bottom: 20px;
+  }
+  
+  .forbidden-message {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 30px;
+  }
+  
+  .forbidden-home-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1e90ff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .forbidden-home-link:hover {
+    background-color: #155a99;
+  }
+  
