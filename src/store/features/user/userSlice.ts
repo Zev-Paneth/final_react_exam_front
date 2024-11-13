@@ -5,6 +5,7 @@ import {IUser} from '../../../../../backend/src/interfaces/interfaces'
 interface UserState extends IUser {
     token: string | null;
     error: string | null;
+    status: string | null;
 }
 
 const initialState: UserState = {
@@ -13,6 +14,7 @@ const initialState: UserState = {
     organization: null,
     token: localStorage.getItem('token') || null,
     error: null,
+    status: null
 };
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -23,6 +25,7 @@ export const registerUser = createAsyncThunk(
     async (userData: { username:string; password: string; organization: string }) => {
 
         const response = await axios.post(`${API_URL}/users/register`, userData);
+        console.log(response.data);
         localStorage.setItem('token', response.data.AccessToken);
         return response.data;
 
@@ -57,10 +60,7 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         logout(state) {
-            state.id = null;
-            state.name = null;
-            state.email = null;
-            state.age = null;
+            state.username = null;
             state.token = null;
             localStorage.removeItem('token');
         },
