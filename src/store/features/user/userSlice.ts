@@ -32,14 +32,13 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     'user/loginUser',
-    async (credentials: { email: string; password: string }) => {
+    async (credentials: { username: string; password: string }) => {
         const response = await axios.post(`${API_URL}/users/login`, credentials);
-        localStorage.setItem('token', response.data.accessToken);
+        localStorage.setItem('token', response.data.AccessToken);
         return response.data;
     }
 );
 
-// קבלת מידע על המשתמש הנוכחי
 export const fetchCurrentUser = createAsyncThunk(
     'user/fetchCurrentUser',
     async (_, {getState}) => {
@@ -68,53 +67,44 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // הרשמה
             .addCase(registerUser.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.id = action.payload.id;
-                state.name = action.payload.name;
-                state.email = action.payload.email;
-                state.token = action.payload.accessToken;
+                state.token = action.payload.AccessToken;
+                state.error = 'not error';
             })
             .addCase(registerUser.rejected, (state) => {
                 state.status = 'failed';
                 state.error = "Can't register user";
             })
-            // התחברות
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.id = action.payload.id;
-                state.name = action.payload.name;
-                state.email = action.payload.email;
-                state.token = action.payload.accessToken;
+                state.token = action.payload.AccessToken;
+                state.error = 'not error';
             })
             .addCase(loginUser.rejected, (state) => {
                 state.status = 'failed';
                 state.error = "Can't login User";
             })
-            // קבלת משתמש נוכחי
             .addCase(fetchCurrentUser.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
             .addCase(fetchCurrentUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.id = action.payload.id;
-                state.name = action.payload.name;
-                state.email = action.payload.email;
-                state.age = action.payload.age;
+                state.username = action.payload.username;
+                state.organization = action.payload.organization;
             })
             .addCase(fetchCurrentUser.rejected, (state) => {
                 state.status = 'failed';
-                state.error = "Can't featch data";
+                state.error = "Can't fetch data";
                 state.token = null;
                 localStorage.removeItem('token');
             });
