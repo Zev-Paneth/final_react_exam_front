@@ -4,7 +4,7 @@ import {RootState} from "../../store/store.ts";
 import {useNavigate} from "react-router-dom";
 import "./RegisterPage.css";
 import {Link} from "react-router-dom";
-import {OrganizationEnum} from "../../../../backend/src/interfaces/interfaces.ts"
+import {IUser, OrganizationEnum} from "../../../../backend/src/interfaces/interfaces.ts"
 import {AppDispatch} from "../../store/store.ts";
 import {handleRegister} from "../../utils/handleAuth.ts";
 

@@ -7,10 +7,10 @@ const Layout: React.FC = () => {
             <nav className="navbar">
                 <h1>War Simulator</h1>
                 <div className="nav-links">
-                    <Link to="/">Login</Link>
+                    <Link to="/login">Login</Link>
                     <Link to="/register">Register</Link>
-                    <Link to="/defend">Defend Page</Link>
-                    <Link to="/attack">Attack Page</Link>
+                    <Link to="playField/defence">Defend Page</Link>
+                    <Link to="playField/attack">Attack Page</Link>
                     <Link to="/shop">Weapon Shop</Link>
                 </div>
             </nav>

@@ -22,13 +22,26 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const registerUser = createAsyncThunk(
     'user/registerUser',
-    async (userData: IUser) => {
-        console.log(API_URL)
-        console.log(userData);
+    async (userData: IUser, {rejectWithValue}) => {
+        try {
+            console.log(API_URL)
+            console.log(userData);
 
-        const response = await axios.post(`${API_URL}/users/register`, userData);
-        localStorage.setItem('token', response.data.AccessToken);
-        return response.data;
+            const response = await axios.post(`${API_URL}/users/register`, userData);
+            localStorage.setItem('token', response.data.AccessToken);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue({
+                    title: error.response?.data?.title || 'Login failed',
+                    message: error.response?.data?.message || 'Login failed',
+                    status: error.response?.status
+                });
+            }
+            return rejectWithValue({ message: 'Login failed', status: 500 });
+
+
+        }
 
     }
 );
@@ -74,6 +87,10 @@ const userSlice = createSlice({
         logout(state) {
             state.username = null;
             state.token = null;
+            state.error = null;
+            state.status = null;
+            state.username = null;
+            state.organization = null;
             localStorage.removeItem('token');
         },
     },

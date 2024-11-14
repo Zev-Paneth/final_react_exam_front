@@ -1,7 +1,7 @@
-import { AppDispatch } from "../store/store";
+import {AppDispatch} from "../store/store";
 import { NavigateFunction } from "react-router-dom";
 import { fetchCurrentUser, loginUser, registerUser } from "../store/features/user/userSlice";
-import { IUser } from "../../../backend/src/interfaces/interfaces";
+import {IOrganization, IUser} from "../../../backend/src/interfaces/interfaces";
 
 const navigateToPlayField = (orgName: string, navigate: NavigateFunction) => {
     navigate(orgName.startsWith("IDF") ? "/playField/defence" : "/playField/attack");
@@ -17,7 +17,6 @@ export const handleRegister = async (
         const user = await dispatch(fetchCurrentUser()).unwrap();
         navigateToPlayField(user.organization.name, navigate);
     } catch (error: any) {
-        // const errorTitle = error.title || 'Login failed!';
         const errorMessage = error.message || 'Login failed!';
         const errorStatus = error.status || 500;
 
@@ -52,6 +51,7 @@ export const handleLogin = async (
         await dispatch(loginUser({ username, password })).unwrap();
         const user = await dispatch(fetchCurrentUser()).unwrap();
         navigateToPlayField(user.organization.name, navigate);
+        return user;
     } catch (error: any) {
         // const errorTitle = error.title || 'Login failed!';
         const errorMessage = error.message || 'Login failed!';
@@ -74,3 +74,21 @@ export const handleLogin = async (
         throw error;
     }
 };
+
+export const useUserSelector = (user : IUser)=> {
+    if (!user) {
+        console.error('user is not uploading in the playing page successfully')
+    }
+    const username = user.username;
+    const organization: IOrganization = user.organization as IOrganization;
+    const orgName = organization.name;
+
+    if (!username || !organization || !orgName) {
+        throw new Error(`something went wrong with upload the user details in the useUserSelector`);
+    }
+    return {
+        username,
+        orgName,
+        organization
+    };
+}
