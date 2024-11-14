@@ -1,26 +1,26 @@
 import React, {useState} from "react";
-import {useSelector} from "react-redux";
-import {loginUser} from "../../store/features/user/userSlice";
-import {RootState} from "../../store";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../store/store.ts";
 import {useNavigate} from "react-router-dom";
-import {useAppDispatch} from "../../hooks/useDispatchType";
 import "./LoginPage.css";
 import {Link} from "react-router-dom";
+import {handleLogin} from "../../utils/handleAuth.ts";
 
-const LoginPage: React.FC = () => {
-    const [email, setEmail] = useState("");
+const Login: React.FC = () => {
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const {status, error} = useSelector((state: RootState) => state.user);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(loginUser({username, password})).then((action) => {
-            if (loginUser.fulfilled.match(action)) {
-                navigate("/playField/:index");
-            }
-        });
+        try {
+            await handleLogin({ username, password }, dispatch, navigate);
+        } catch (error) {
+            console.error(error);
+            alert(`Failed to login user: ${JSON.stringify(error)}`);
+        }
     };
 
     return (
@@ -31,10 +31,10 @@ const LoginPage: React.FC = () => {
 
             <form onSubmit={handleSubmit}>
                 <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                     autoComplete="username"
                 />
@@ -55,4 +55,4 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default LoginPage;
+export default Login;

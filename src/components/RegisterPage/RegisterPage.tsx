@@ -6,7 +6,7 @@ import "./RegisterPage.css";
 import {Link} from "react-router-dom";
 import {OrganizationEnum} from "../../../../backend/src/interfaces/interfaces.ts"
 import {AppDispatch} from "../../store/store.ts";
-import {handleRegistration} from "../../utils/handleRegistration.ts";
+import {handleRegister} from "../../utils/handleAuth.ts";
 
 const organizationArr = Object.values(OrganizationEnum) as string[];
 
@@ -23,7 +23,7 @@ const RegisterPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await handleRegistration({ username, password, organization }, dispatch, navigate);
+            await handleRegister({ username, password, organization }, dispatch, navigate);
         } catch (error) {
             console.error(error);
             alert(`Failed to register user: ${error}`);
