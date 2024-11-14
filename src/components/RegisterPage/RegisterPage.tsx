@@ -1,34 +1,35 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {registerUser} from "../../store/features/user/userSlice";
-import {RootState} from "../../store";
+import {RootState} from "../../store/store.ts";
 import {useNavigate} from "react-router-dom";
 import "./RegisterPage.css";
 import {Link} from "react-router-dom";
 import {OrganizationEnum} from "../../../../backend/src/interfaces/interfaces.ts"
 import {AppDispatch} from "../../store/store.ts";
+import {handleRegistration} from "../../utils/handleRegistration.ts";
 
 const organizationArr = Object.values(OrganizationEnum) as string[];
+
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [organization, setOrganization] = useState("");
+    const [organization, setOrganization] = useState(organizationArr[0]);
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const {status, error} = useSelector((state: RootState) => state.user);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(registerUser({username, password, organization})).then(
-            (action) => {
-                if (registerUser.fulfilled.match(action)) {
-                    navigate("/playField/:index");
-                }
-            }
-        );
+        try {
+            await handleRegistration({ username, password, organization }, dispatch, navigate);
+        } catch (error) {
+            console.error(error);
+            alert(`Failed to register user: ${error}`);
+        }
     };
+
 
     return (
         <div className="register-container">
@@ -44,6 +45,7 @@ const RegisterPage: React.FC = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     required
                 />
+
                 <input
                     type="password"
                     placeholder="Password"
@@ -52,18 +54,12 @@ const RegisterPage: React.FC = () => {
                     required
                     autoComplete="new-password"
                 />
-                <select>
-                    {
-                        organizationArr.map((organization) => (
-                            <option
-                                key={organization}
-                                value={organization}
-                                onChange={() => setOrganization(organization)}
-                            >
-                                {organization}
-                            </option>
-                        ))
-                    }
+                <select onChange={(e) => setOrganization(e.target.value)} value={organization}>
+                    {organizationArr.map((organization) => (
+                        <option key={organization} value={organization}>
+                            {organization}
+                        </option>
+                    ))}
                 </select>
                 <button type="submit">Register</button>
             </form>

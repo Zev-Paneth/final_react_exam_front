@@ -22,10 +22,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const registerUser = createAsyncThunk(
     'user/registerUser',
-    async (userData: { username:string; password: string; organization: string }) => {
+    async (userData: IUser) => {
+        console.log(API_URL)
+        console.log(userData);
 
         const response = await axios.post(`${API_URL}/users/register`, userData);
-        console.log(response.data);
         localStorage.setItem('token', response.data.AccessToken);
         return response.data;
 
@@ -54,7 +55,6 @@ export const fetchCurrentUser = createAsyncThunk(
         return response.data;
     }
 );
-
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -74,7 +74,7 @@ const userSlice = createSlice({
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.token = action.payload.AccessToken;
-                state.error = 'not error';
+                state.error = null;
             })
             .addCase(registerUser.rejected, (state) => {
                 state.status = 'failed';
